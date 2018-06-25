@@ -360,9 +360,10 @@ ul.blockList ul.blockListLast li.blocklist {
 }
 .indexContainer a {
   font-family: "Courier new", Courier;
-  font-size: 2.2em;
+  font-size: 1.4em;
   text-align: center;
   text-decoration: underline;
+  text-shadow: 0px 0px 12px rgba(0, 191, 186, 0.81);
 }
 .indexContainer h2 {
   font-size: 1.1em;
@@ -658,4 +659,12 @@ h1.hidden {
 }
 .strong {
   font-weight: bold;
+}
+
+.tableTab span{
+  margin: -8px 0px 0px -8px !important;
+}
+
+.activeTableTab span{
+  margin: -8px 0px 0px -8px !important;
 }

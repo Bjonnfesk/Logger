@@ -13,30 +13,30 @@ public class OutputWorker implements Runnable {
 	private Logger l;
 	private int logLevel;
 	private String function;
-	private String text;
+	private String message;
 	
-	public OutputWorker(Logger l, int logLevel, String function, String text) {
+	public OutputWorker(Logger l, int logLevel, String function, String message) {
 		this.l = l;
 		this.logLevel = logLevel;
 		this.function = function;
-		this.text = text;
+		this.message = message;
 	}
 	
 	@Override
 	public void run() {
 		Date d = new Date();
-		PrintStream outputStream = System.out;
+		PrintStream console = System.out;
 		if (this.logLevel == 1) {
-			outputStream = System.err;
+			console = System.err;
 		}
-		String formattedOutput = l.getFormat().format(d, Logger.getLogLevels(), this.logLevel, l.getCl(), this.function, this.text);
+		String formattedMessage = l.getFormat().format(d, l.getLogLevels(), this.logLevel, l.getInstantiatingClass().getSimpleName(), this.function, this.message);
 		try {
-			outputStream.println(formattedOutput);
+			console.println(formattedMessage);
 		} catch (Exception e) {
 			l.e("doInBackground", e.getClass().getSimpleName() + "::" + e.getMessage());
 		}
 		try {
-			FileUtils.writeStringToFile(new File("praefectusbiviorumdirectoriorum.log"), formattedOutput + "\r\n", "utf-8", true);
+			FileUtils.writeStringToFile(new File("praefectusbiviorumdirectoriorum.log"), formattedMessage + "\r\n", "utf-8", true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

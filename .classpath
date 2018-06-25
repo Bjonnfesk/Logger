@@ -9,5 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-io-2.6-bin/commons-io-2.6-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/commons-io-2.6-bin/commons-io-2.6-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Linguistics"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

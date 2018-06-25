@@ -2,6 +2,7 @@ package com.aastorp.logger;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -61,8 +62,8 @@ public class Format {
 	 * @param t The text message that will be logged
 	 * @return the string
 	 */
-	public String format(Date d /*Date*/, String[] lls/*logLevels*/, int ll/*logLevel*/, String c/*class*/, String f/*function*/, String t/*text*/) {
-		return String.format(this.getFormatString(), DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(d), leftPad(lls[ll], this.logLevelLength), rightPad(c, this.classLength), leftPad((f + "()"), this.functionLength), t);
+	public String format(Date d /*Date*/, HashMap<Integer, String> lls, int ll/*logLevel*/, String c/*class*/, String f/*function*/, String t/*text*/) {
+		return String.format(this.getFormatString(), DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(d), leftPad(lls.get(ll), this.logLevelLength), rightPad(c, this.classLength), leftPad((f + "()"), this.functionLength), t);
 	}
 	
 	/**
@@ -75,6 +76,7 @@ public class Format {
 	 * @param l The length to pad the String to
 	 * @return The padded String
 	 */
+	@Deprecated
 	private String leftPad(String t, int l) {
 		if (t.length() > l) {
 			if (t.substring(t.length() - 2, t.length()).equals("()")) {
@@ -90,8 +92,8 @@ public class Format {
 	}
 
 	/**
-	 * Right-pad a String to the specified length If the String is too long, 
-	 * it will be chomped. If the String ends in "()", leftPad() assumes it 
+	 * Right-pad a String to the specified length. If the String is too long, 
+	 * it will be chomped. If the String ends in "()", rightPad() assumes it 
 	 * is a function name, and will retain the suffix even if these characters 
 	 * would normally be removed due to the String being too long.
 	 *
@@ -99,6 +101,7 @@ public class Format {
 	 * @param l The length to pad the String to
 	 * @return The padded String
 	 */
+	@Deprecated
 	private String rightPad(String t, int l) {
 		if (t.length() > l) {
 			if (t.substring(t.length() - 2, t.length()).equals("()")) {

@@ -1,4 +1,15 @@
+package com.aastorp.logger;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Date;
+import java.util.HashMap;
+
+import org.apache.commons.io.FileUtils;
+
+import com.aastorp.linguistics.Linguist;
+import com.aastorp.linguistics.Padder;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -27,6 +38,9 @@ public class Logger {
 	/** The instantiating class, the class of the object that instantiated the logger. */
 	private Class<?> instantiatingClass;
 	
+	/** The available log levels */
+	private HashMap<Integer, String> logLevels = new HashMap<Integer, String>();
+	
 	/** The log level. */
 	private int logLevel;
 	
@@ -53,6 +67,18 @@ public class Logger {
 	 * Instantiates a new logger.
 	 *
 	 * @param instantiatingClass The class of the object instantiating the logger.
+	 * @param logLevel The log level this logger will log at.
+	 * @param logToFile Whether the logger should log to a file or not. 
+	 * @param logFile The log file
+	 */
+	public Logger(Class<?> instantiatingClass, int logLevel, boolean logToFile, File logFile) {
+		this(instantiatingClass, logLevel, logToFile, logFile, new Format(": ", " :: ", 7, 14, 20));
+	}
+	
+	/**
+	 * Instantiates a new logger.
+	 *
+	 * @param instantiatingClass The class of the object instantiating the logger.
 	 * @param logLevel The log level
 	 * @param logToFile Whether the logger should log to a file or not. 
 	 * @param logFile The log file
@@ -64,6 +90,75 @@ public class Logger {
 		this.setLogToFile(logToFile);
 		this.setLogFile(logFile);
 		this.setFormat(format);
+		this.logLevels.put(0, "SILENT");
+		this.logLevels.put(1, "ERROR");
+		this.logLevels.put(2, "WARNING");
+		this.logLevels.put(3, "DEBUG");
+		this.logLevels.put(4, "INFO");
+		
+	}
+	
+	public void header(String h) {
+		this.header(h, Logger.ERROR);
+	}
+	
+	public void header(String h, int logLevel) {
+		final String F = "header";
+		String formattedHeader;
+		PrintStream console = System.out;
+		Linguist padder;
+		StringBuilder sb = new StringBuilder(h.length() + 6);
+		if (logLevel == Logger.ERROR) {
+			console = System.err;
+		}
+		padder = new Padder("", "center", h.length() + 4, "-");
+		sb.append("/");
+		sb.append(padder.work());
+		sb.append("\\\r\n");
+		
+		padder = new Padder(h, "center", h.length() + 4);
+		sb.append("|");
+		sb.append((String)padder.work());
+		sb.append("|");
+		
+		padder = new Padder("", "center", h.length() + 4, "-");
+		sb.append("\r\n\\");
+		sb.append(padder.work());
+		sb.append("/");
+		
+		formattedHeader = sb.toString();
+		
+		console.println(formattedHeader);
+		
+		if (this.isLogToFile()) {
+			try {
+				FileUtils.writeStringToFile(this.getLogFile(), formattedHeader, "UTF-8", true);
+			} catch (IOException e) {
+				this.e(F, "Could not write header to file " + this.getLogLevel() + ": " + e.getMessage());
+			}
+		}
+		
+	}
+	
+	public void e(String f, String m) {
+		OutputWorker ow = new OutputWorker(this, Logger.ERROR, f, m);
+		ow.run();
+	}
+	public void d(String f, String m) {
+		OutputWorker ow = new OutputWorker(this, Logger.DEBUG, f, m);
+		ow.run();
+	}
+	public void i(String f, String m) {
+		OutputWorker ow = new OutputWorker(this, Logger.INFO, f, m);
+		ow.run();
+	}
+	public void w(String f, String m) {
+		OutputWorker ow = new OutputWorker(this, Logger.WARNING, f, m);
+		ow.run();
+	}
+	public void l(String f, String m, int l) {
+		OutputWorker ow = new OutputWorker(this, l, f, m);
+		ow.run();
 	}
 
 	/**
@@ -127,5 +222,9 @@ public class Logger {
 	 */
 	public Class<?> getInstantiatingClass() {
 		return instantiatingClass;
+	}
+
+	public HashMap<Integer, String> getLogLevels() {
+		return this.logLevels;
 	}
 }
