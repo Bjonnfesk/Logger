@@ -13,7 +13,7 @@ import com.aastorp.linguistics.Padder;
 
 // TODO: Auto-generated Javadoc
 /**
- * Logger - logs formatted messages to console and optionally a file, respecting the specified log level
+ * Logger - logs formatted messages to console and optionally a file, respecting the specified log level.
  */
 public class Logger {
 	
@@ -33,15 +33,15 @@ public class Logger {
 	public static final int INFO = 4;
 	
 	/** The Constant VERSION. */
-	public static final String VERSION = "0.2.5";
+	public static final String VERSION = "0.2.6";
 	
 	/** The instantiating class, the class of the object that instantiated the logger. */
 	private Class<?> instantiatingClass;
 	
-	/** The available log levels */
+	/** The available log level.s */
 	private HashMap<Integer, String> logLevels = new HashMap<Integer, String>();
 	
-	/** The log level. */
+	/** The log level.. */
 	private int logLevel;
 	
 	/** Whether the logger should log to a file or not. */
@@ -57,7 +57,7 @@ public class Logger {
 	 * Instantiates a new logger.
 	 *
 	 * @param instantiatingClass The class of the object instantiating the logger.
-	 * @param logLevel The log level this logger will log at.
+	 * @param logLevel The log level. this logger will log at.
 	 */
 	public Logger(Class<?> instantiatingClass, int logLevel) {
 		this(instantiatingClass, logLevel, false, null, new Format(": ", " :: ", 7, 14, 20));
@@ -67,7 +67,7 @@ public class Logger {
 	 * Instantiates a new logger.
 	 *
 	 * @param instantiatingClass The class of the object instantiating the logger.
-	 * @param logLevel The log level this logger will log at.
+	 * @param logLevel The log level. this logger will log at.
 	 * @param logToFile Whether the logger should log to a file or not. 
 	 * @param logFile The log file
 	 */
@@ -79,7 +79,7 @@ public class Logger {
 	 * Instantiates a new logger.
 	 *
 	 * @param instantiatingClass The class of the object instantiating the logger.
-	 * @param logLevel The log level
+	 * @param logLevel The log level.
 	 * @param logToFile Whether the logger should log to a file or not. 
 	 * @param logFile The log file
 	 * @param format The com.aastorp.logger.Format that defines how to output log messages.
@@ -139,23 +139,65 @@ public class Logger {
 		}
 		
 	}
-	
+	/**
+	 * Logs at the ERROR log level.
+	 * @param f The calling function's name.
+	 * @param m The text message to log.
+	 */
 	public void e(String f, String m) {
 		OutputWorker ow = new OutputWorker(this, Logger.ERROR, f, m, this.getLogFile());
 		ow.run();
 	}
+	/**
+	 * Logs at the ERROR log level.
+	 * @param f The calling function's name.
+	 * @param e An exception whos class' SimpleName and Message will be logged.
+	 */
+	public void e(String f, Exception e) {
+		this.e(f, e.getClass().getSimpleName() + ": " + e.getMessage());
+	}
+	/**
+	 * Logs at the ERROR log level.
+	 * @param f The calling function's name.
+	 * @param e An exception whos class' SimpleName and Message will be logged.
+	 * @param et Extra text to append to the end of the log message.
+	 */
+	public void e(String f, Exception e, String et) {
+		this.e(f, e.getClass().getSimpleName() + ": " + e.getMessage() + ": " + et);
+	}
+	/**
+	 * Logs at the DEBUG log level.
+	 * @param f The calling function's name.
+	 * @param m The text message to log.
+	 */
 	public void d(String f, String m) {
 		OutputWorker ow = new OutputWorker(this, Logger.DEBUG, f, m, this.getLogFile());
 		ow.run();
 	}
+	/**
+	 * Logs at the INFO log level.
+	 * @param f The calling function's name.
+	 * @param m The text message to log.
+	 */
 	public void i(String f, String m) {
 		OutputWorker ow = new OutputWorker(this, Logger.INFO, f, m, this.getLogFile());
 		ow.run();
 	}
+	/**
+	 * Logs at the WARNING log level.
+	 * @param The f calling function's name.
+	 * @param The m text message to log.
+	 */
 	public void w(String f, String m) {
 		OutputWorker ow = new OutputWorker(this, Logger.WARNING, f, m, this.getLogFile());
 		ow.run();
 	}
+	/**
+	 * Logs at the specified log level.
+	 * @param The f calling function's name.
+	 * @param The m text message to log.
+	 * @param The l log level to log at. Valid values are Logger.SILENT, Logger.INFO, Logger.DEBUG, Logger.WARNING and Logger.ERROR.
+	 */
 	public void l(String f, String m, int l) {
 		OutputWorker ow = new OutputWorker(this, l, f, m, this.getLogFile());
 		ow.run();
