@@ -141,23 +141,23 @@ public class Logger {
 	}
 	
 	public void e(String f, String m) {
-		OutputWorker ow = new OutputWorker(this, Logger.ERROR, f, m);
+		OutputWorker ow = new OutputWorker(this, Logger.ERROR, f, m, this.getLogFile());
 		ow.run();
 	}
 	public void d(String f, String m) {
-		OutputWorker ow = new OutputWorker(this, Logger.DEBUG, f, m);
+		OutputWorker ow = new OutputWorker(this, Logger.DEBUG, f, m, this.getLogFile());
 		ow.run();
 	}
 	public void i(String f, String m) {
-		OutputWorker ow = new OutputWorker(this, Logger.INFO, f, m);
+		OutputWorker ow = new OutputWorker(this, Logger.INFO, f, m, this.getLogFile());
 		ow.run();
 	}
 	public void w(String f, String m) {
-		OutputWorker ow = new OutputWorker(this, Logger.WARNING, f, m);
+		OutputWorker ow = new OutputWorker(this, Logger.WARNING, f, m, this.getLogFile());
 		ow.run();
 	}
 	public void l(String f, String m, int l) {
-		OutputWorker ow = new OutputWorker(this, l, f, m);
+		OutputWorker ow = new OutputWorker(this, l, f, m, this.getLogFile());
 		ow.run();
 	}
 

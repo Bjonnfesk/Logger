@@ -14,12 +14,14 @@ public class OutputWorker implements Runnable {
 	private int logLevel;
 	private String function;
 	private String message;
+	private File logFile;
 	
-	public OutputWorker(Logger l, int logLevel, String function, String message) {
+	public OutputWorker(Logger l, int logLevel, String function, String message, File logFile) {
 		this.l = l;
 		this.logLevel = logLevel;
 		this.function = function;
 		this.message = message;
+		this.logFile = logFile;
 	}
 	
 	@Override
@@ -35,10 +37,12 @@ public class OutputWorker implements Runnable {
 		} catch (Exception e) {
 			l.e("doInBackground", e.getClass().getSimpleName() + "::" + e.getMessage());
 		}
-		try {
-			FileUtils.writeStringToFile(new File("praefectusbiviorumdirectoriorum.log"), formattedMessage + "\r\n", "utf-8", true);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (this.logFile != null) {
+			try {
+				FileUtils.writeStringToFile(this.logFile, formattedMessage + "\r\n", "utf-8", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
