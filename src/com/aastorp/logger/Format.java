@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.aastorp.linguistics.Linguist;
+import com.aastorp.linguistics.Padder;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Format.
@@ -55,68 +58,29 @@ public class Format {
 	 * Format.
 	 *
 	 * @param d A Date that should represent the current time, or the time the log request was made
-	 * @param lls A String[] representing the available log levels
+	 * @param lls A HashMap with the available log levels
 	 * @param ll An int specifying the current logLevel
 	 * @param c The class name that will be logged
 	 * @param f The function name that will be logged
 	 * @param t The text message that will be logged
 	 * @return the string
 	 */
-	public String format(Date d /*Date*/, HashMap<Integer, String> lls, int ll/*logLevel*/, String c/*class*/, String f/*function*/, String t/*text*/) {
-		return String.format(this.getFormatString(), DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(d), leftPad(lls.get(ll), this.logLevelLength), rightPad(c, this.classLength), leftPad((f + "()"), this.functionLength), t);
+	public String format(Date d, HashMap<Integer, String> lls, int ll, String c, String f, String t) {
+		String formattedDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(d);
+		Padder padder = new Padder(lls.get(ll), "centre", this.logLevelLength);
+		String formattedLogLevel = (String)padder.work();
+		padder.setWidth(this.classLength);
+		padder.setPadSide("right");
+		padder.setUnmodifiedString(c);
+		String formattedClassName = (String)padder.work();
+		padder.setWidth(this.functionLength);
+		padder.setPadSide("left");
+		padder.setUnmodifiedString(f + (f.length() != 0 ? "()" : "")); //add the function suffix if f is non-empty
+		String formattedFunctionName = (String)padder.work();
+		
+		return String.format(this.getFormatString(), formattedDate, formattedLogLevel, formattedClassName, formattedFunctionName, t);
 	}
 	
-	/**
-	 * Left-pad a String to the specified length. If the String is too long, 
-	 * it will be chomped. If the String ends in "()", leftPad() assumes it 
-	 * is a function name, and will retain the suffix even if these characters 
-	 * would normally be removed due to the String being too long.
-	 *
-	 * @param t The String to pad
-	 * @param l The length to pad the String to
-	 * @return The padded String
-	 */
-	@Deprecated
-	private String leftPad(String t, int l) {
-		if (t.length() > l) {
-			if (t.substring(t.length() - 2, t.length()).equals("()")) {
-				return String.format("%" + (l - 3) + "." + (l - 3) + "s", t) + "…()";
-			} else {
-				return String.format("%" + (l - 1) + "." + (l - 1) + "s", t) + "…";
-			} //yeeeeeeeaaaaaaaaaa...... that's unintelligible.
-		} else if (t.length() == 2) {
-			return String.format("%" + l + "." + l + "s", "");
-		} else {
-			return String.format("%" + l + "." + l + "s", t);
-		}
-	}
-
-	/**
-	 * Right-pad a String to the specified length. If the String is too long, 
-	 * it will be chomped. If the String ends in "()", rightPad() assumes it 
-	 * is a function name, and will retain the suffix even if these characters 
-	 * would normally be removed due to the String being too long.
-	 *
-	 * @param t The String to pad
-	 * @param l The length to pad the String to
-	 * @return The padded String
-	 */
-	@Deprecated
-	private String rightPad(String t, int l) {
-		if (t.length() > l) {
-			if (t.substring(t.length() - 2, t.length()).equals("()")) {
-				return String.format("%-" + (l - 3) + "." + (l - 3) + "s", t) + "…()";
-			} else {
-				return String.format("%-" + (l - 1) + "." + (l - 1) + "s", t) + "…";
-			}
-		} else if (t.length() == 2) {
-			return String.format("%-" + l + "." + l + "s", "");
-		} else {
-			return String.format("%-" + l + "." + l + "s", t);
-		}
-
-	}
-
 	/**
 	 * @return The logLevelLength of the Format
 	 */

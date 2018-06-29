@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
 
-import javax.swing.SwingWorker;
-
 import org.apache.commons.io.FileUtils;
 
 public class OutputWorker implements Runnable {
@@ -26,23 +24,35 @@ public class OutputWorker implements Runnable {
 	
 	@Override
 	public void run() {
+		if (!(l.getLogLevel() >= this.logLevel) && this.logLevel != Logger.ALWAYS) {
+			//The log level of this message is too low to log.
+			return;
+		}
 		Date d = new Date();
 		PrintStream console = System.out;
-		if (this.logLevel == 1) {
+		if (this.logLevel == Logger.ERROR) {
 			console = System.err;
 		}
 		String formattedMessage = l.getFormat().format(d, l.getLogLevels(), this.logLevel, l.getInstantiatingClass().getSimpleName(), this.function, this.message);
-		try {
-			console.println(formattedMessage);
-		} catch (Exception e) {
-			l.e("doInBackground", e.getClass().getSimpleName() + "::" + e.getMessage());
-		}
+		printToConsole(console, formattedMessage);
+		printToFile(formattedMessage);
+	}
+
+	private void printToFile(String formattedMessage) {
 		if (this.logFile != null) {
 			try {
 				FileUtils.writeStringToFile(this.logFile, formattedMessage + "\r\n", "utf-8", true);
 			} catch (IOException e) {
-				e.printStackTrace();
+				l.e("run", e);
 			}
+		}
+	}
+
+	private void printToConsole(PrintStream console, String formattedMessage) {
+		try {
+			console.println(formattedMessage);
+		} catch (Exception e) {
+			l.e("printToConsole", e);
 		}
 	}
 

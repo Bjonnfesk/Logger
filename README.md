@@ -2,6 +2,10 @@
 
 ## Changelog
 
++ **0.2.6.1:**
+	
+	- Added logLevel ALWAYS, which logs the message no matter what the Logger's log level is. Use sparingly.
+	- Re-added outputStartMessage() and the call to it.
 + **0.2.6:**
 
 	- Added README.
